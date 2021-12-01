@@ -38,7 +38,7 @@ class Trainer:
 
     def quantile_huber_loss(self, errors, k=1.0):
         return torch.where(
-            errors <= -self.quantile * k, 
+            errors < -self.quantile * k, 
             self.quantile * errors.abs(),
             torch.where(
                 errors > (1. - self.quantile) * k,
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     trainer2.train(data, 100)
     trainer3.train(data, 100)
 
-    plt.scatter(data.x, data.y, s=1)
+    plt.scatter(data.x, data.y, s=1, c="k")
     evaluate(trainer1, data)
     evaluate(trainer2, data)
     evaluate(trainer3, data)
