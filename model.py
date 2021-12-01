@@ -13,8 +13,12 @@ class MLPRegressionModel(nn.Module):
         return self.f(x)
 
 class MLPMeanAndVarianceRegressionModel(nn.Module):
-    def __init__(self, n_input_channels=1, n_output_channels=1):
+    def __init__(self,
+                 var_scale=10., 
+                 n_input_channels=1,
+                 n_output_channels=1):
         super().__init__()
+        self.var_scale = var_scale
         self.f = nn.Sequential(
             nn.Linear(n_input_channels, 256),
             nn.Sigmoid(),
@@ -29,6 +33,6 @@ class MLPMeanAndVarianceRegressionModel(nn.Module):
     def forward(self, x):
         prediction = self.f(x)
         mu = self.mu(prediction)
-        var = 10. * self.var(prediction)
+        var = self.var_scale * self.var(prediction)
         return mu, var
     
